@@ -4,57 +4,57 @@
 
 {% block body %}
 <div class="container mt-5 mb-5">
-<form method="post" action="{% url 'quiz' %}">
-  {% csrf_token %}
-  <h1 class="text-center">
-    Quiz
-  </h1>
-  {% for q in questions %}
-  <div class="card border-info">
-    <div class="card-header bg-info text-white">Question {{forloop.counter}}</div>
-      <div class="card-body">
-        <h5 class="user-select-none">
-          {{ q.question }}
-        </h5>
-        <input type="hidden" name="q{{forloop.counter}}" value="{{q.id}}">
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="q{{forloop.counter}}o" id="q{{forloop.counter}}o1" value="A">
-          <label class="form-check-label" for="q{{forloop.counter}}o1">
-            {{ q.option1 }}
-          </label>
+  <h1 class="text-center">Quiz</h1>
+
+  <form method="get" action="">
+    <div class="mb-3">
+      <label for="subject" class="form-label">Select Subject:</label>
+      <select class="form-select" id="subject" name="subject" onchange="this.form.submit()">
+        <option value="">--Select Subject--</option>
+        {% for subject in subjects %}
+          <option value="{{ subject }}" {% if subject == selected_subject %}selected{% endif %}>{{ subject }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  {% if selected_subject %}
+    <form method="post" action="{% url 'quiz' %}">
+      {% csrf_token %}
+      {% for q in questions %}
+        <div class="card border-info mb-3">
+          <div class="card-header bg-info text-white">Question {{ forloop.counter }}</div>
+          <div class="card-body">
+            <h5 class="user-select-none">{{ q.question }}</h5>
+            <input type="hidden" name="q{{ forloop.counter }}" value="{{ q.id }}">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="q{{ forloop.counter }}o" id="q{{ forloop.counter }}o1" value="A">
+              <label class="form-check-label" for="q{{ forloop.counter }}o1">{{ q.option1 }}</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="q{{ forloop.counter }}o" id="q{{ forloop.counter }}o2" value="B">
+              <label class="form-check-label" for="q{{ forloop.counter }}o2">{{ q.option2 }}</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="q{{ forloop.counter }}o" id="q{{ forloop.counter }}o3" value="C">
+              <label class="form-check-label" for="q{{ forloop.counter }}o3">{{ q.option3 }}</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="q{{ forloop.counter }}o" id="q{{ forloop.counter }}o4" value="D">
+              <label class="form-check-label" for="q{{ forloop.counter }}o4">{{ q.option4 }}</label>
+            </div>
+          </div>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="q{{forloop.counter}}o" id="q{{forloop.counter}}o2" value="B">
-          <label class="form-check-label" for="q{{forloop.counter}}o2">
-            {{ q.option2 }}
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="q{{forloop.counter}}o" id="q{{forloop.counter}}o3" value="C">
-          <label class="form-check-label" for="q{{forloop.counter}}o3">
-            {{ q.option3 }}
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" name="q{{forloop.counter}}o" id="q{{forloop.counter}}o4" value="D">
-          <label class="form-check-label" for="q{{forloop.counter}}o4">
-            {{ q.option4 }}
-          </label>
-        </div>
+      {% endfor %}
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
+        <label class="form-check-label" for="exampleCheck1">I confirmed.</label>
       </div>
-    </div>
-    <br>
-    {% endfor %}
-    <br>
-    <div class="mb-3 form-check">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1" required>
-      <label class="form-check-label" for="exampleCheck1">
-         I confirmed.
-      </label>
-    </div>
-  </div>
-  <br>
-  <button type="submit" class="btn btn-primary w-100">Submit</button>
-</form>
+      <input type="hidden" name="subject" value="{{ selected_subject }}">
+      <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+  {% else %}
+    <p>Please select a subject to start the quiz.</p>
+  {% endif %}
 </div>
 {% endblock %}

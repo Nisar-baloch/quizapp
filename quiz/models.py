@@ -11,6 +11,7 @@ class Question(models.Model):
     correct_option = models.CharField(max_length=1, blank=False)
     creator = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True)
     verified = models.BooleanField(default=False)
+    subject = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return f"Question({self.question}, {self.creator})"
